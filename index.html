@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="線上即時五子棋對戰 - 與好友一起玩">
+    <title>五子棋大對決 - GitHub Pages</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚫</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 五子棋大對決</h1>
+            <p class="subtitle">與好友即時對戰 · 比誰連線多</p>
+        </header>
+
+        <!-- 遊戲模式選擇 -->
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="local">本地雙人</button>
+            <button class="mode-btn" data-mode="online">線上同步</button>
+        </div>
+
+        <!-- 線上同步區域 -->
+        <div class="online-section" id="onlineSection" style="display: none;">
+            <div class="room-controls">
+                <input type="text" id="roomId" placeholder="輸入房間ID" maxlength="6">
+                <button class="btn secondary" onclick="joinRoom()">加入房間</button>
+                <button class="btn primary" onclick="createRoom()">創建房間</button>
+            </div>
+            <div class="room-info">
+                <span id="roomStatus">未連接</span>
+                <span id="playerCount">玩家: 0/2</span>
+            </div>
+        </div>
+
+        <!-- 遊戲資訊 -->
+        <div class="game-info">
+            <div class="player-turn" id="status">
+                <span class="player1">玩家1</span>的回合
+            </div>
+            <div class="scores">
+                <div class="score player1-score">
+                    <span class="stone">○</span>
+                    <span id="score1">0</span>
+                </div>
+                <div class="score player2-score">
+                    <span class="stone">✕</span>
+                    <span id="score2">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 遊戲棋盤 -->
+        <div class="board-container">
+            <div class="board" id="board"></div>
+        </div>
+
+        <!-- 控制按鈕 -->
+        <div class="controls">
+            <button class="btn secondary" onclick="switchPlayer()">切換玩家</button>
+            <button class="btn primary" onclick="calculateScores()">計算分數</button>
+            <button class="btn danger" onclick="resetGame()">重新開始</button>
+            <button class="btn info" onclick="shareGame()" id="shareBtn">分享遊戲</button>
+        </div>
+
+        <!-- 遊戲結果 -->
+        <div class="result" id="result"></div>
+
+        <!-- 分享模態框 -->
+        <div class="modal" id="shareModal">
+            <div class="modal-content">
+                <h3>📱 分享遊戲</h3>
+                <p>複製下方連結分享給好友：</p>
+                <div class="share-input">
+                    <input type="text" id="shareUrl" readonly>
+                    <button class="btn primary" onclick="copyShareUrl()">複製</button>
+                </div>
+                <div class="qr-code" id="qrCode"></div>
+                <button class="btn secondary" onclick="closeModal()">關閉</button>
+            </div>
+        </div>
+
+        <!-- 遊戲說明 -->
+        <div class="instructions">
+            <h3>🎯 遊戲規則</h3>
+            <ul>
+                <li>輪流在棋盤上下棋（○ 和 ✕）</li>
+                <li>下滿整個棋盤後計算分數</li>
+                <li>連成 5 子算 1 條連線</li>
+                <li>連線數量多者獲勝</li>
+                <li>可以水平、垂直、對角線連線</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>Powered by GitHub Pages | 開源專案</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
