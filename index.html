@@ -3,101 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="線上即時五子棋對戰 - 與好友一起玩">
-    <title>五子棋大對決 - GitHub Pages</title>
+    <title>即時五子棋對戰 - 比連線多</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚫</text></svg>">
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>🎮 五子棋大對決</h1>
-            <p class="subtitle">與好友即時對戰 · 比誰連線多</p>
+            <h1>🎮 即時五子棋對戰</h1>
+            <p class="subtitle">規則：下滿棋盤，比誰的連線多！</p>
         </header>
 
-        <!-- 遊戲模式選擇 -->
-        <div class="mode-selector">
-            <button class="mode-btn active" data-mode="local">本地雙人</button>
-            <button class="mode-btn" data-mode="online">線上同步</button>
-        </div>
-
-        <!-- 線上同步區域 -->
-        <div class="online-section" id="onlineSection" style="display: none;">
+        <!-- 房間管理 -->
+        <div class="room-section">
             <div class="room-controls">
-                <input type="text" id="roomId" placeholder="輸入房間ID" maxlength="6">
-                <button class="btn secondary" onclick="joinRoom()">加入房間</button>
-                <button class="btn primary" onclick="createRoom()">創建房間</button>
+                <input type="text" id="roomInput" placeholder="輸入房間ID" maxlength="6">
+                <button class="btn primary" onclick="joinRoom()">加入房間</button>
+                <button class="btn secondary" onclick="createRoom()">創建房間</button>
             </div>
             <div class="room-info">
-                <span id="roomStatus">未連接</span>
-                <span id="playerCount">玩家: 0/2</span>
+                <span id="roomStatus">未加入房間</span>
+                <span id="playerInfo">玩家: -</span>
             </div>
         </div>
 
-        <!-- 遊戲資訊 -->
+        <!-- 遊戲設定 -->
+        <div class="config-section">
+            <div class="config-item">
+                <label>棋盤大小:</label>
+                <select id="boardSize" onchange="updateBoardSize()">
+                    <option value="8">8x8</option>
+                    <option value="10" selected>10x10</option>
+                    <option value="12">12x12</option>
+                    <option value="15">15x15</option>
+                </select>
+            </div>
+            <div class="config-item">
+                <label>連線長度:</label>
+                <select id="winLength" onchange="updateWinLength()">
+                    <option value="3">3子</option>
+                    <option value="4">4子</option>
+                    <option value="5" selected>5子</option>
+                    <option value="6">6子</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- 遊戲狀態 -->
         <div class="game-info">
             <div class="player-turn" id="status">
-                <span class="player1">玩家1</span>的回合
+                等待加入房間...
             </div>
             <div class="scores">
-                <div class="score player1-score">
+                <div class="score player1">
                     <span class="stone">○</span>
                     <span id="score1">0</span>
                 </div>
-                <div class="score player2-score">
+                <div class="score player2">
                     <span class="stone">✕</span>
                     <span id="score2">0</span>
                 </div>
             </div>
         </div>
 
-        <!-- 遊戲棋盤 -->
+        <!-- 棋盤 -->
         <div class="board-container">
             <div class="board" id="board"></div>
         </div>
 
         <!-- 控制按鈕 -->
         <div class="controls">
-            <button class="btn secondary" onclick="switchPlayer()">切換玩家</button>
-            <button class="btn primary" onclick="calculateScores()">計算分數</button>
             <button class="btn danger" onclick="resetGame()">重新開始</button>
-            <button class="btn info" onclick="shareGame()" id="shareBtn">分享遊戲</button>
+            <button class="btn secondary" onclick="leaveRoom()">離開房間</button>
         </div>
 
         <!-- 遊戲結果 -->
         <div class="result" id="result"></div>
 
-        <!-- 分享模態框 -->
-        <div class="modal" id="shareModal">
-            <div class="modal-content">
-                <h3>📱 分享遊戲</h3>
-                <p>複製下方連結分享給好友：</p>
-                <div class="share-input">
-                    <input type="text" id="shareUrl" readonly>
-                    <button class="btn primary" onclick="copyShareUrl()">複製</button>
-                </div>
-                <div class="qr-code" id="qrCode"></div>
-                <button class="btn secondary" onclick="closeModal()">關閉</button>
-            </div>
-        </div>
-
-        <!-- 遊戲說明 -->
-        <div class="instructions">
-            <h3>🎯 遊戲規則</h3>
-            <ul>
-                <li>輪流在棋盤上下棋（○ 和 ✕）</li>
-                <li>下滿整個棋盤後計算分數</li>
-                <li>連成 5 子算 1 條連線</li>
-                <li>連線數量多者獲勝</li>
-                <li>可以水平、垂直、對角線連線</li>
-            </ul>
+        <!-- 玩家列表 -->
+        <div class="players-section">
+            <h3>👥 在線玩家</h3>
+            <div id="playersList"></div>
         </div>
     </div>
 
-    <footer>
-        <p>Powered by GitHub Pages | 開源專案</p>
-    </footer>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
